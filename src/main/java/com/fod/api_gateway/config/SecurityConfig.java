@@ -18,19 +18,17 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for non-browser clients
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Apply CORS configuration
-                .authorizeExchange(exchange -> exchange
-                        .anyExchange().permitAll() // Allow all requests (can be adjusted)
-                )
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .authorizeExchange(exchange -> exchange.anyExchange().permitAll())
                 .build();
     }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:5173")); // Allowed origin (adjust as needed)
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed methods
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")); // Allowed methods
         config.setAllowedHeaders(List.of("*")); // Allow all headers
         config.setAllowCredentials(true); // Allow credentials (cookies, authorization headers)
 
